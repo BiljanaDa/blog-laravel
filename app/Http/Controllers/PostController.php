@@ -5,16 +5,38 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StorePostRequest;
 use App\Http\Requests\UpdatePostRequest;
 use App\Http\Resources\PostResource;
+use App\Http\Resources\ShortPostResource;
 use App\Models\Post;
+use Illuminate\Http\Request;
+
+
 
 class PostController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    private $perPage = 10;
+    public function index(Request $request)
     {
-        return PostResource::collection(Post::all());
+
+        $page = $request->input('page') ? $request->input('page') : 1;
+        $perPage = $request->input('perPage') ? $request->input('perPage') : 10;
+        if ($perPage && $perPage > 20) {
+            return response('Invalid page number', 400);
+        }
+        $skip = $page * $perPage - $perPage;
+        $posts = Post::take($perPage)->skip($skip)->get();
+
+        $metadata = [
+            'metadata' => [
+                'total' => Post::count(),
+                'count' => $posts->count(),
+                'perPage' => $this->perPage
+            ]
+        ];
+
+        return ShortPostResource::collection($posts)->additional($metadata);
 
     }
 
@@ -46,7 +68,7 @@ class PostController extends Controller
     }
 
 
-   
+
     /**
      * Update the specified resource in storage.
      */
@@ -57,7 +79,7 @@ class PostController extends Controller
             $message = 'Post not found.';
             return response($message, 404);
         }
-        
+
         $post->update($request->only('title', 'body'));
         return new PostResource($post);
     }
