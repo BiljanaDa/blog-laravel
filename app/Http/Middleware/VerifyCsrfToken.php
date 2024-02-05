@@ -12,6 +12,8 @@ class VerifyCsrfToken extends Middleware
      * @var array<int, string>
      */
     protected $except = [
-        //
+        'localhost:3000',
+        'http://localhost:3000',
+        
     ];
 }

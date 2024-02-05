@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\PostController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -16,4 +17,9 @@ use Illuminate\Support\Facades\Route;
 */
 
 // Route::get('/api/posts');
-Route::apiResource('/posts', PostController::class);
+
+
+
+Route::apiResource('/posts', PostController::class)->middleware('auth:sanctum');
+Route::post('/signup', [AuthController::class, 'signup']);
+Route::post('/signin', [AuthController::class, 'signin']);
