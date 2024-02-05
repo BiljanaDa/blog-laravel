@@ -18,7 +18,7 @@ class ShortPostResource extends JsonResource
             'id' => $this->id,
             'created_at' => $this->created_at,
             'title' => $this->title,
-            'body' => substr($this->body, 0, 100) . '...',
+            'body' => substr($this->body, 0, 30) . '...',
             'image' => $this->image
         ];
     }

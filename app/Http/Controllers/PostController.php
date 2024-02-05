@@ -32,7 +32,7 @@ class PostController extends Controller
             'metadata' => [
                 'total' => Post::count(),
                 'count' => $posts->count(),
-                'perPage' => $this->perPage
+                'perPage' => $perPage
             ]
         ];
 
